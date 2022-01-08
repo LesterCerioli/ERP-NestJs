@@ -1,18 +1,31 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { CreateUserDto } from './dto/create-user.dto';
+import { User, UserDocument } from './entities/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
-describe('UsersService', () => {
-  let service: UsersService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService],
-    }).compile();
+@Injectable()
+export class UserService {
+  userModel: any;
+  constructor(@InjectModel(User.name) private catModel: Model<UserDocument>) {}
 
-    service = module.get<UsersService>(UsersService);
-  });
+  create(createUserDto: CreateUserDto) {
+    const user = new this.userModel(createUserDto);
+    return user.save();
+  }
+  findAll() {
+    return 'This action returns all users';
+  }
+  findOne(id: number) {
+    return 'This actions returns #${id} user';
+  }
+  update(id: number, updateUserDto: UpdateUserDto) {
+    return 'This action updates a #${id} user';
+  }
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-});
+}
+
+
+
